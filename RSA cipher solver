@@ -1,0 +1,35 @@
+from Cryptodome.Util.number import inverse
+
+# Given values
+e = 7
+N = 143
+C = [130, 19, 108, 98, 19, 123, 69, 72, 98, 65, 98, 60, 54, 67, 102]
+
+# Step 1: Calculate p and q
+def factors(N):
+    p = 2
+    while p * p <= N:
+        if N % p == 0:
+            q = N // p
+            return p, q
+        p += 1
+
+p, q = factors(N)
+
+# Step 2: Calculate phi
+phi = (p - 1) * (q - 1)
+
+# Step 3: Calculate d
+d = inverse(e, phi)
+
+# Step 4: Decrypt
+def decrypt_character(C, d, N):
+    return pow(C, d, N)
+
+
+M = [decrypt_character(c, d, N) for c in C]
+
+# Decode in plaintext
+plaintext = ''.join(chr(m) for m in M)
+
+print("Decrypted message:", plaintext)
